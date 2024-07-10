@@ -1,7 +1,7 @@
 type optionType
 type options = array<optionType>
 
-type actionTypes = [
+type actions = [
   | #clear
   | #"#create-option"
   | #"deselect-option"
@@ -10,12 +10,10 @@ type actionTypes = [
   | #"select-option"
   | #"set-value"
 ]
+type actionMeta = {action: actions}
 
-// type valueType =
-//   | OptionType(optionType)
-//   | OptionsType(optionsType)
-//   | Null
-//   | Undefined
+type menuPlacement = [#bottom | #auto | #top]
+type menuPosition = [#absolute | #fixed]
 
 external makeOption: {..} => optionType = "%identity"
 
@@ -25,13 +23,39 @@ external make: (
   ~clearValue: unit => unit=?,
   ~defaultValue: option<optionType>=?,
   ~getStyles: (string, {"value": 'a}) => 'b=?,
-  // ~getValue: unit => valueType=?,
   ~hasValue: bool=?,
   ~isMulti: bool=?,
   ~options: options,
   ~onChange: optionType => unit=?,
   ~selectOption: optionType => unit=?,
   ~selectProps: {..}=?,
-  // ~setValue: (valueType, actionTypes) => unit=?,
   ~emotion: {..}=?,
 ) => React.element = "default"
+
+module Async = {
+  @module("react-select/async") @react.component
+  external make: (
+    ~cacheOptions: bool=?,
+    ~className: string=?,
+    ~clearValue: unit => unit=?,
+    ~defaultValue: option<optionType>=?,
+    ~getStyles: (string, {"value": 'a}) => 'b=?,
+    ~hasValue: bool=?,
+    ~isMulti: bool=?,
+    ~isLoading: bool=?,
+    ~isSelected: bool=?,
+    ~options: options=?, // TODO????
+    ~onChange: (optionType, actionMeta) => unit=?,
+    ~selectOption: optionType => unit=?,
+    ~selectProps: {..}=?,
+    ~emotion: {..}=?,
+    ~loadOptions: string => promise<options>=?,
+    ~defaultOptions: options=?,
+    ~value: option<optionType>=?,
+    ~menuShouldScrollIntoView: bool=?,
+    ~menuShouldBlockScroll: bool=?,
+    ~menuPlacement: menuPlacement=?,
+    ~menuPosition: menuPosition=?,
+    ~required: bool=?,
+  ) => React.element = "default"
+}
