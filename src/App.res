@@ -2,7 +2,9 @@
 
 @react.component
 let make = () => {
-  <CountrySelect
-    className="custom-class" country=Some("us") onChange={country => Js.log(country)}
-  />
+  <div className="country-select-wrapper">
+    <CountrySelect
+      className="country-select" country=Some("us") onChange={country => Js.log(country)}
+    />
+  </div>
 }

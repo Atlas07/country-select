@@ -1,1 +1,18 @@
+@import "/node_modules/flag-icons/css/flag-icons.min.css";
+
+html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+.country-select-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+.country-select {
+    width: 350px;
+}
 
