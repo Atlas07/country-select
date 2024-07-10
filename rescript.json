@@ -23,7 +23,13 @@
     "mode": "automatic"
   },
   "uncurried": false,
-  "bs-dependencies": ["@rescript/react", "@rescript/core", "rescript-webapi"],
+  "bs-dependencies": [
+    "@rescript/react",
+    "@rescript/core",
+    "rescript-webapi",
+    "@greenlabs/ppx-spice"
+  ],
+  "ppx-flags": ["@greenlabs/ppx-spice/ppx"],
   "bs-dev-dependencies": ["rescript-vitest"],
   "bsc-flags": ["-open RescriptCore"]
 }

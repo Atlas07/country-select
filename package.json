@@ -19,6 +19,7 @@
     "rescript-webapi": "^0.9.1"
   },
   "devDependencies": {
+    "@greenlabs/ppx-spice": "^0.2.1",
     "@jihchi/vite-plugin-rescript": "^6.0.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
