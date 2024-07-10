@@ -1,0 +1,29 @@
+{
+  "name": "country-select",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "tests",
+      "type": "dev",
+      "subdirs": true
+    }
+  ],
+  "package-specs": [
+    {
+      "module": "es6",
+      "in-source": true
+    }
+  ],
+  "suffix": ".bs.js",
+  "jsx": {
+    "version": 4,
+    "mode": "automatic"
+  },
+  "uncurried": false,
+  "bs-dependencies": ["@rescript/react", "@rescript/core", "rescript-webapi"],
+  "bs-dev-dependencies": ["rescript-vitest"],
+  "bsc-flags": ["-open RescriptCore"]
+}
