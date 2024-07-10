@@ -29,12 +29,13 @@ external make: (
   ~onChange: optionType => unit=?,
   ~selectOption: optionType => unit=?,
   ~selectProps: {..}=?,
-  ~emotion: {..}=?,
 ) => React.element = "default"
 
 module Async = {
   @module("react-select/async") @react.component
   external make: (
+    // ~ref: React.ref<Nullable.t<Dom.element>>=?,
+    ~ref: React.ref<Nullable.t<'z>>=?,
     ~cacheOptions: bool=?,
     ~className: string=?,
     ~clearValue: unit => unit=?,
@@ -44,8 +45,11 @@ module Async = {
     ~isMulti: bool=?,
     ~isLoading: bool=?,
     ~isSelected: bool=?,
+    ~isSearchable: bool=?,
+    ~isClearable: bool=?,
     ~options: options=?, // TODO????
     ~onChange: (optionType, actionMeta) => unit=?,
+    ~onMenuOpen: unit => unit=?,
     ~selectOption: optionType => unit=?,
     ~selectProps: {..}=?,
     ~emotion: {..}=?,
@@ -57,5 +61,9 @@ module Async = {
     ~menuPlacement: menuPlacement=?,
     ~menuPosition: menuPosition=?,
     ~required: bool=?,
+    ~placeholder: string=?,
   ) => React.element = "default"
 }
+
+type modules
+@module("react-select") @val external all: modules = "components"
