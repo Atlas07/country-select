@@ -28,6 +28,10 @@
   
 }
 
+.dropdown-arrow {
+    min-width: 8px;
+}
+
 .menu {
     position: absolute;
     z-index: 2;
