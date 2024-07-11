@@ -75,6 +75,25 @@ let customStyles: Style.styles = {
   },
 }
 
+module CustomControl = {
+  let make: React.component<ReactSelect.Components.controlProps> => React.element = %raw(`
+    function (Control) {
+      return function (props) {
+        const { children, ...rest } = props;
+
+        return React.createElement(
+          Control,
+          rest,
+          React.createElement('span', null, '👍 '),
+          children
+        );
+      }
+    }
+  `)
+}
+
+let customControlComponent = CustomControl.make(ReactSelect.Components.control)
+
 module Dropdown = {
   @react.component
   let make = (~children, ~isOpen, ~target) => {
@@ -96,6 +115,8 @@ let make = (~className, ~country: option<string>, ~onChange) => {
   let (isLoading, setIsLoading) = React.useState(_ => false)
   let (isOpen, setIsOpen) = React.useState(_ => false)
   let (selectedOption, setSelectedOption) = React.useState(_ => None)
+
+  // Js.log(ReactSelect.control)
 
   React.useEffect(() => {
     setIsLoading(_ => true)
@@ -175,7 +196,11 @@ let make = (~className, ~country: option<string>, ~onChange) => {
     <ReactSelect.Async
       autoFocus=true
       backspaceRemovesValue=false
-      components={"DropdownIndicator": React.null, "IndicatorSeparator": React.null}
+      components={
+        dropdownIndicator: React.null,
+        indicatorSeparator: React.null,
+        control: customControlComponent,
+      }
       controlShouldRenderValue=false
       hideSelectedOptions=false
       isClearable=false
