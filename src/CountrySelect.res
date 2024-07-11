@@ -1,15 +1,66 @@
 %%raw(`import './CountrySelect.css'`)
 
+module Style = ReactSelect.Style
+
+let selectStyles: Style.styles = {
+  container: provided => {
+    let override = {
+      "border": "1px solid rgba(0, 0, 0, 0.2)",
+      "borderRadius": "3px",
+    }->Style.makeStyle
+
+    Style.mergeStyles(provided, override)
+  },
+  control: provided => {
+    let override = {
+      "border": 0,
+      "boxShadow": 0,
+      "borderBottom": "1px solid rgba(0, 0, 0, 0.2)",
+      "borderRadius": 0,
+      "&:hover": {
+        "borderColor": "rgba(0, 0, 0, 0.2)",
+      },
+    }->Style.makeStyle
+
+    Style.mergeStyles(provided, override)
+  },
+  menu: _provided => {
+    {
+      "border": 0,
+    }->Style.makeStyle
+  },
+  menuList: provided => {
+    let override = {
+      "::-webkit-scrollbar": {
+        "display": "none",
+      },
+    }->Style.makeStyle
+
+    Style.mergeStyles(provided, override)
+  },
+}
+
+module Dropdown = {
+  @react.component
+  let make = (~children, ~isOpen, ~target) => {
+    <div className="dropdown">
+      {target}
+      {switch isOpen {
+      | true => <div className="menu"> {children} </div>
+      | false => React.null
+      }}
+    </div>
+  }
+}
+
 let coutryToOption = country => country->CountryModel.toObject->ReactSelect.makeOption
 
 @react.component
 let make = (~className, ~country: option<string>, ~onChange) => {
   let (countries, setCountries) = React.useState(_ => None)
   let (isLoading, setIsLoading) = React.useState(_ => false)
+  let (isOpen, setIsOpen) = React.useState(_ => false)
   let (selectedOption, setSelectedOption) = React.useState(_ => None)
-  let selectRef = React.useRef(Nullable.null)
-
-  Js.log(ReactSelect.all)
 
   React.useEffect(() => {
     setIsLoading(_ => true)
@@ -67,41 +118,46 @@ let make = (~className, ~country: option<string>, ~onChange) => {
 
   let handleChange = (option, _action) => {
     setSelectedOption(_ => option->Some)
+    setIsOpen(_ => false)
     onChange(option)
   }
 
-  switch selectRef.current->Nullable.toOption {
-  | Some(ref) => Js.log2("ref", ref)
-
-  | None => ()
-  }
-
-  let handleMenuOpen = () => {
-    let selectedEl =
-      Webapi.Dom.document->Webapi.Dom.Document.getElementsByClassName(
-        "MyDropdown__option--is-selected",
-      )
-    Js.log2("SELECTED?", selectedEl)
-  }
-
-  <>
-    // <ReactSelect className options={options} defaultValue onChange />
+  <Dropdown
+    isOpen={isOpen}
+    target={<button
+      className="shadow countries-dropdown-button" onClick={_ => setIsOpen(prev => !prev)}>
+      {switch selectedOption {
+      | Some(value) =>
+        let formatted = value->Obj.magic
+        <>
+          <span className={`fi fi-${formatted["value"]} flag-icon`} />
+          <span className="countries-dropdown-text"> {formatted["label"]->React.string} </span>
+          <TriangleSVG direction={isOpen ? #up : #down} />
+        </>
+      | None => "Select a State"->React.string
+      }}
+    </button>}>
     <ReactSelect.Async
+      autoFocus=true
+      backspaceRemovesValue=false
+      components={"DropdownIndicator": React.null, "IndicatorSeparator": React.null}
+      controlShouldRenderValue=false
+      hideSelectedOptions=false
+      isClearable=false
+      menuIsOpen=true
+      onChange={(option, action) => handleChange(option, action)}
+      tabSelectsValue=false
+      value=selectedOption
       className
-      ref={ReactDOM.Ref.domRef(selectRef->Obj.magic)->Obj.magic}
+      classNamePrefix="TEST"
+      isLoading
+      placeholder="Search"
       cacheOptions=true
-      value=None
       defaultOptions=options
       loadOptions
-      onChange={(option, action) => handleChange(option, action)}
-      isLoading
-      menuShouldScrollIntoView=true
-      menuPosition=#fixed
-      onMenuOpen={handleMenuOpen}
-      isClearable=false
-      placeholder="Search"
+      maxMenuHeight=400
+      styles={selectStyles}
+      // onBlur={_ => setIsOpen(_ => false)}
     />
-    <span className="fi fi-gr flag-icon" />
-    <span className="fi fi-gr flag-icon" />
-  </>
+  </Dropdown>
 }

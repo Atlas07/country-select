@@ -17,6 +17,35 @@ type menuPosition = [#absolute | #fixed]
 
 external makeOption: {..} => optionType = "%identity"
 
+type components = {"DropdownIndicator": React.element, "IndicatorSeparator": React.element}
+
+@module("react-select")
+external components: components = "components"
+
+module Style = {
+  type t
+
+  type styleFunction = t => t
+
+  type styles = {
+    container: styleFunction,
+    control: styleFunction,
+    menu: styleFunction,
+    menuList: styleFunction,
+  }
+
+  external makeStyle: {..} => t = "%identity"
+
+  let mergeStyles: (t, t) => t = %raw(`
+  function(provided, override) {
+    return {
+      ...provided,
+      ...override,
+    }
+  }
+`)
+}
+
 @module("react-select") @react.component
 external make: (
   ~className: string=?,
@@ -29,6 +58,7 @@ external make: (
   ~onChange: optionType => unit=?,
   ~selectOption: optionType => unit=?,
   ~selectProps: {..}=?,
+  ~styles: Style.styles=?,
 ) => React.element = "default"
 
 module Async = {
@@ -38,17 +68,21 @@ module Async = {
     ~ref: React.ref<Nullable.t<'z>>=?,
     ~cacheOptions: bool=?,
     ~className: string=?,
+    ~classNamePrefix: string=?,
+    ~name: string=?,
     ~clearValue: unit => unit=?,
     ~defaultValue: option<optionType>=?,
     ~getStyles: (string, {"value": 'a}) => 'b=?,
     ~hasValue: bool=?,
     ~isMulti: bool=?,
+    ~isFocused: bool=?,
     ~isLoading: bool=?,
     ~isSelected: bool=?,
     ~isSearchable: bool=?,
     ~isClearable: bool=?,
     ~options: options=?, // TODO????
     ~onChange: (optionType, actionMeta) => unit=?,
+    ~onBlur: {..} => unit=?,
     ~onMenuOpen: unit => unit=?,
     ~selectOption: optionType => unit=?,
     ~selectProps: {..}=?,
@@ -62,8 +96,20 @@ module Async = {
     ~menuPosition: menuPosition=?,
     ~required: bool=?,
     ~placeholder: string=?,
+    ~components: components=?,
+    ~inputValue: string=?,
+    ~onInputChange: (string, actionMeta) => unit=?,
+    ~menuIsOpen: bool=?,
+    ~autoFocus: bool=?,
+    ~backspaceRemovesValue: bool=?,
+    ~controlShouldRenderValue: bool=?,
+    ~hideSelectedOptions: bool=?,
+    ~tabSelectsValue: bool=?,
+    ~minMenuHeight: int=?,
+    ~maxMenuHeight: int=?,
+    ~styles: Style.styles=?,
   ) => React.element = "default"
 }
 
-type modules
-@module("react-select") @val external all: modules = "components"
+// type modules
+// @module("react-select") @val external all: modules = "components"

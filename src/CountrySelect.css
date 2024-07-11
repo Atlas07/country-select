@@ -1,4 +1,40 @@
 .flag-icon {
     width: 16px;
     height: 16px;
+    display: flex;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.countries-dropdown-button {
+    width: 145px;
+    border-radius: 3px;
+    padding: 6px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.countries-dropdown-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 6px; 
+  
+}
+
+.menu {
+    position: absolute;
+    z-index: 2;
+    width: 230px;
+    margin-top: 3px;
+}
+
+.search {
+    z-index: 2;
 }
