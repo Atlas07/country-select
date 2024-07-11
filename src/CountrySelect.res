@@ -1,9 +1,21 @@
 %%raw(`import './CountrySelect.css'`)
 
 module Style = ReactSelect.Style
+module Theme = ReactSelect.Theme
 
-let selectStyles: Style.styles = {
-  container: provided => {
+let customTheme = Theme.make(
+  ~colors=Theme.makeColors(
+    ~primary="rgba(255, 219, 179, 1)",
+    ~primary25="rgba(255, 219, 179, 0.7)",
+    ~neutral90="rgba(51, 51, 51, 1)",
+    ~neutral30="rgba(0, 0, 0, 0.32)",
+    (),
+  ),
+  (),
+)
+
+let customStyles: Style.styles = {
+  container: (provided, _) => {
     let override = {
       "border": "1px solid rgba(0, 0, 0, 0.2)",
       "borderRadius": "3px",
@@ -11,8 +23,10 @@ let selectStyles: Style.styles = {
 
     Style.mergeStyles(provided, override)
   },
-  control: provided => {
+  control: (provided, _) => {
     let override = {
+      "fontSize": "14px",
+      "color": "var(--neutral-30)",
       "border": 0,
       "boxShadow": 0,
       "borderBottom": "1px solid rgba(0, 0, 0, 0.2)",
@@ -24,18 +38,39 @@ let selectStyles: Style.styles = {
 
     Style.mergeStyles(provided, override)
   },
-  menu: _provided => {
+  input: (provided, state) => {
+    let override = {
+      "color": state.theme.colors.neutral30,
+    }->Style.makeStyle
+
+    Style.mergeStyles(provided, override)
+  },
+  menu: (_provided, _) => {
     {
       "border": 0,
     }->Style.makeStyle
   },
-  menuList: provided => {
+  menuList: (provided, _) => {
     let override = {
       "::-webkit-scrollbar": {
         "display": "none",
       },
     }->Style.makeStyle
 
+    Style.mergeStyles(provided, override)
+  },
+  option: (provided, state) => {
+    let override = {
+      "fontSize": "14px",
+      "height": "auto",
+      "minHeight": "26px",
+      "padding": "2px 12px",
+      "alignItems": "center",
+      "whiteSpace": "normal",
+      "wordWrap": "break-word",
+      "overflow": "hidden",
+      "color": state.theme.colors.neutral90,
+    }->Style.makeStyle
     Style.mergeStyles(provided, override)
   },
 }
@@ -132,7 +167,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
         <>
           <span className={`fi fi-${formatted["value"]} flag-icon`} />
           <span className="countries-dropdown-text"> {formatted["label"]->React.string} </span>
-          <TriangleSVG direction={isOpen ? #up : #down} />
+          <TriangleSVG className="dropdown-arrow" direction={isOpen ? #up : #down} />
         </>
       | None => "Select a State"->React.string
       }}
@@ -149,14 +184,14 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       tabSelectsValue=false
       value=selectedOption
       className
-      classNamePrefix="TEST"
       isLoading
       placeholder="Search"
       cacheOptions=true
       defaultOptions=options
       loadOptions
       maxMenuHeight=400
-      styles={selectStyles}
+      styles={customStyles}
+      theme={_ => customTheme}
       // onBlur={_ => setIsOpen(_ => false)}
     />
   </Dropdown>
