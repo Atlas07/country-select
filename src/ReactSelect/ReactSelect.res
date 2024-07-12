@@ -2,8 +2,8 @@ module Theme = ReactSelect__Theme
 module State = ReactSelect__State
 module Style = ReactSelect__Style
 
-type optionType
-type options = array<optionType>
+type optionType<'a> = 'a
+type options<'a> = array<optionType<'a>>
 
 type actions = [
   | #clear
@@ -18,8 +18,6 @@ type actionMeta = {action: actions}
 
 type menuPlacement = [#bottom | #auto | #top]
 type menuPosition = [#absolute | #fixed]
-
-external makeOption: {..} => optionType = "%identity"
 
 module Components = {
   type t = {
@@ -40,13 +38,13 @@ module Components = {
 external make: (
   ~className: string=?,
   ~clearValue: unit => unit=?,
-  ~defaultValue: option<optionType>=?,
+  ~defaultValue: option<optionType<'a>>=?,
   ~getStyles: (string, {"value": 'a}) => 'b=?,
   ~hasValue: bool=?,
   ~isMulti: bool=?,
-  ~options: options,
-  ~onChange: optionType => unit=?,
-  ~selectOption: optionType => unit=?,
+  ~options: options<'a>,
+  ~onChange: optionType<'a> => unit=?,
+  ~selectOption: optionType<'a> => unit=?,
   ~selectProps: {..}=?,
   ~styles: Style.styles=?,
 ) => React.element = "default"
@@ -61,7 +59,7 @@ module Async = {
     ~classNamePrefix: string=?,
     ~name: string=?,
     ~clearValue: unit => unit=?,
-    ~defaultValue: option<optionType>=?,
+    ~defaultValue: option<optionType<'a>>=?,
     ~getStyles: (string, {"value": 'a}) => 'b=?,
     ~hasValue: bool=?,
     ~isMulti: bool=?,
@@ -70,16 +68,16 @@ module Async = {
     ~isSelected: bool=?,
     ~isSearchable: bool=?,
     ~isClearable: bool=?,
-    ~options: options=?, // TODO????
-    ~onChange: (optionType, actionMeta) => unit=?,
+    ~options: options<'a>=?,
+    ~onChange: (optionType<'a>, actionMeta) => unit=?,
     ~onBlur: {..} => unit=?,
     ~onMenuOpen: unit => unit=?,
-    ~selectOption: optionType => unit=?,
+    ~selectOption: optionType<'a> => unit=?,
     ~selectProps: {..}=?,
     ~emotion: {..}=?,
-    ~loadOptions: string => promise<options>=?,
-    ~defaultOptions: options=?,
-    ~value: option<optionType>=?,
+    ~loadOptions: string => promise<options<'a>>=?,
+    ~defaultOptions: options<'a>=?,
+    ~value: option<optionType<'a>>=?,
     ~menuShouldScrollIntoView: bool=?,
     ~menuShouldBlockScroll: bool=?,
     ~menuPlacement: menuPlacement=?,

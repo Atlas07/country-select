@@ -82,7 +82,6 @@ module CustomControl = {
   ) => React.element = %raw(`
     function (Control, Icon) {
       return function (props) {
-        console.log({ Control, Icon })
         const { children, ...rest } = props;
 
         return React.createElement(
@@ -121,8 +120,6 @@ let make = (~className, ~country: option<string>, ~onChange) => {
   let (isOpen, setIsOpen) = React.useState(_ => false)
   let (selectedOption, setSelectedOption) = React.useState(_ => None)
 
-  // Js.log(ReactSelect.control)
-
   React.useEffect(() => {
     setIsLoading(_ => true)
     Queries.fetchCountries()
@@ -136,13 +133,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
 
         switch country {
         | Some(default) =>
-          setSelectedOption(
-            _ =>
-              countries
-              ->Array.find(country => country.value === default)
-              ->Option.map(CountryModel.coutryToOption),
-          )
-
+          setSelectedOption(_ => countries->Array.find(country => country.value === default))
         | None => ()
         }
 
@@ -169,11 +160,11 @@ let make = (~className, ~country: option<string>, ~onChange) => {
 
   let loadOptions = inputValue =>
     Promise.make((res, _rej) => {
-      inputValue->filterOptions->Array.map(CountryModel.coutryToOption)->res
+      inputValue->filterOptions->res
     })
 
   let options = switch countries {
-  | Some(counties) => counties->Array.map(CountryModel.coutryToOption)
+  | Some(counties) => counties
   | None => []
   }
 
@@ -212,7 +203,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       menuIsOpen=true
       onChange={(option, action) => handleChange(option, action)}
       tabSelectsValue=false
-      value=selectedOption
+      value={selectedOption}
       className
       isLoading
       placeholder="Search"
@@ -222,6 +213,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       maxMenuHeight=400
       styles={customStyles}
       theme={_ => customTheme}
+      menuShouldScrollIntoView=true
       // onBlur={_ => setIsOpen(_ => false)}
     />
   </Dropdown>
