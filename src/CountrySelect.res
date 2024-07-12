@@ -2,6 +2,7 @@
 
 module Style = ReactSelect.Style
 module Theme = ReactSelect.Theme
+module FilterAsync = ReactSelect.Filter.Async
 
 let customTheme = Theme.make(
   ~colors=Theme.makeColors(
@@ -100,6 +101,8 @@ let customControlComponent = CustomControl.make(
   <SearchSVG className="control-search-icon" />,
 )
 
+let filterCountries = FilterAsync.make(~config=FilterAsync.makeConfig(~matchFrom=#start, ()))
+
 module Dropdown = {
   @react.component
   let make = (~children, ~isOpen, ~target) => {
@@ -147,20 +150,15 @@ let make = (~className, ~country: option<string>, ~onChange) => {
     None
   }, [])
 
-  let filterOptions = inputValue => {
-    switch countries {
-    | Some(options) =>
-      let lowerCasedInputValue = String.toLowerCase(inputValue)
-      options->Array.filter(option =>
-        option.label->String.toLowerCase->String.includes(lowerCasedInputValue)
-      )
-    | None => []
-    }
-  }
-
-  let loadOptions = inputValue =>
+  let loadOptions = (inputValue, _callback) =>
     Promise.make((res, _rej) => {
-      inputValue->filterOptions->res
+      switch countries {
+      | Some(options) =>
+        let filtered =
+          options->Array.filter(option => filterCountries(~candidate=option.label, ~inputValue))
+        filtered->res
+      | None => []->res
+      }
     })
 
   let options = switch countries {

@@ -1,6 +1,7 @@
 module Theme = ReactSelect__Theme
 module State = ReactSelect__State
 module Style = ReactSelect__Style
+module Filter = ReactSelect__Filter
 
 type optionType<'a> = 'a
 type options<'a> = array<optionType<'a>>
@@ -30,8 +31,6 @@ module Components = {
 
   @module("react-select") @scope("components")
   external control: React.component<controlProps> = "Control"
-
-  // @module("react-select") @scope("components") external menu: React.component<menuProps> = "Menu"
 }
 
 @module("react-select") @react.component
@@ -75,7 +74,7 @@ module Async = {
     ~selectOption: optionType<'a> => unit=?,
     ~selectProps: {..}=?,
     ~emotion: {..}=?,
-    ~loadOptions: string => promise<options<'a>>=?,
+    ~loadOptions: (string, options<'a> => unit) => promise<options<'a>>=?,
     ~defaultOptions: options<'a>=?,
     ~value: option<optionType<'a>>=?,
     ~menuShouldScrollIntoView: bool=?,
