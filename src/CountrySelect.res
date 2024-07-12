@@ -177,11 +177,10 @@ let make = (~className, ~country: option<string>, ~onChange) => {
     target={<button
       className="shadow countries-dropdown-button" onClick={_ => setIsOpen(prev => !prev)}>
       {switch selectedOption {
-      | Some(value) =>
-        let formatted = value->Obj.magic
+      | Some(option) =>
         <>
-          <span className={`fi fi-${formatted["value"]} flag-icon`} />
-          <span className="countries-dropdown-text"> {formatted["label"]->React.string} </span>
+          <span className={`fi fi-${option.value} flag-icon`} />
+          <span className="countries-dropdown-text"> {option.label->React.string} </span>
           <TriangleSVG className="dropdown-arrow" direction={isOpen ? #up : #down} />
         </>
       | None => "Select a State"->React.string
@@ -212,6 +211,12 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       styles={customStyles}
       theme={_ => customTheme}
       menuShouldScrollIntoView=true
+      formatOptionLabel={(data, _context) => {
+        <>
+          <span className={`fi fi-${data.value} flag-icon flag-icon-option`} />
+          <span> {data.label->React.string} </span>
+        </>
+      }}
       // onBlur={_ => setIsOpen(_ => false)}
     />
   </Dropdown>
