@@ -76,15 +76,19 @@ let customStyles: Style.styles = {
 }
 
 module CustomControl = {
-  let make: React.component<ReactSelect.Components.controlProps> => React.element = %raw(`
-    function (Control) {
+  let make: (
+    React.component<ReactSelect.Components.controlProps>,
+    React.element,
+  ) => React.element = %raw(`
+    function (Control, Icon) {
       return function (props) {
+        console.log({ Control, Icon })
         const { children, ...rest } = props;
 
         return React.createElement(
           Control,
           rest,
-          React.createElement('span', null, '👍 '),
+          Icon,
           children
         );
       }
@@ -92,7 +96,10 @@ module CustomControl = {
   `)
 }
 
-let customControlComponent = CustomControl.make(ReactSelect.Components.control)
+let customControlComponent = CustomControl.make(
+  ReactSelect.Components.control,
+  <SearchSVG className="control-search-icon" />,
+)
 
 module Dropdown = {
   @react.component
