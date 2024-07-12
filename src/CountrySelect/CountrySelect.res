@@ -49,11 +49,15 @@ module Dropdown = {
   }
 
   @react.component
-  let make = (~children, ~isOpen, ~target) => {
+  let make = (~children, ~isOpen, ~onClose, ~target) => {
     <div className="dropdown">
       {target}
       {switch isOpen {
-      | true => <div className="menu"> {children} </div>
+      | true =>
+        <>
+          <div className="menu"> {children} </div>
+          <div className="blanket" onClick={onClose} />
+        </>
       | false => React.null
       }}
     </div>
@@ -116,7 +120,10 @@ let make = (~className, ~country: option<string>, ~onChange) => {
     onChange(option)
   }
 
-  <Dropdown isOpen={isOpen} target={<Dropdown.Target selectedOption isOpen setIsOpen />}>
+  <Dropdown
+    isOpen={isOpen}
+    onClose={_ => setIsOpen(_ => false)}
+    target={<Dropdown.Target selectedOption isOpen setIsOpen />}>
     <ReactSelect.Async
       autoFocus=true
       backspaceRemovesValue=false
@@ -148,7 +155,6 @@ let make = (~className, ~country: option<string>, ~onChange) => {
           <span> {data.label->React.string} </span>
         </>
       }}
-      // onBlur={_ => setIsOpen(_ => false)}
     />
   </Dropdown>
 }
