@@ -114,8 +114,6 @@ module Dropdown = {
   }
 }
 
-let coutryToOption = country => country->CountryModel.toObject->ReactSelect.makeOption
-
 @react.component
 let make = (~className, ~country: option<string>, ~onChange) => {
   let (countries, setCountries) = React.useState(_ => None)
@@ -142,7 +140,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
             _ =>
               countries
               ->Array.find(country => country.value === default)
-              ->Option.map(coutryToOption),
+              ->Option.map(CountryModel.coutryToOption),
           )
 
         | None => ()
@@ -171,11 +169,11 @@ let make = (~className, ~country: option<string>, ~onChange) => {
 
   let loadOptions = inputValue =>
     Promise.make((res, _rej) => {
-      inputValue->filterOptions->Array.map(coutryToOption)->res
+      inputValue->filterOptions->Array.map(CountryModel.coutryToOption)->res
     })
 
   let options = switch countries {
-  | Some(counties) => counties->Array.map(coutryToOption)
+  | Some(counties) => counties->Array.map(CountryModel.coutryToOption)
   | None => []
   }
 
