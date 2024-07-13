@@ -23,7 +23,7 @@ type menuPosition = [#absolute | #fixed]
 type formatOptionLabelMeta<'a> = {
   context: [#menu | #value],
   inputValue: string,
-  selectedValue: array<'a>
+  selectedValue: array<'a>,
 }
 
 module Components = {
@@ -31,12 +31,43 @@ module Components = {
     @as("DropdownIndicator") dropdownIndicator?: React.element, // right binding?
     @as("IndicatorSeparator") indicatorSeparator?: React.element,
     @as("Control") control?: React.element,
+    @as("MenuList") menuList?: React.element,
   }
 
   type controlProps
+  type menuListProps
 
   @module("react-select") @scope("components")
   external control: React.component<controlProps> = "Control"
+
+  @module("react-select") @scope("components")
+  external menuList: React.component<menuListProps> = "MenuList"
+
+  module MenuList = {
+    @module("react-select") @scope("components") @react.component
+    external make: (
+      ~ref: 'ref=?,
+      ~children: React.element,
+      ~clearValue: unit => unit,
+      ~cx: 'cx,
+      ~focusedOption: optionType<'a>,
+      ~getClassNames: ('key, 'props) => string,
+      ~getStyles: ('key, 'props) => {..},
+      ~getValue: array<optionType<'a>>,
+      ~hasValue: bool,
+      ~innerProps: {..},
+      ~innerRef: 'innerRefProps => 'innerRefObj=?,
+      ~isLoading: bool,
+      ~isMulti: bool,
+      ~isRtl: bool,
+      ~maxHeight: int,
+      ~options: array<optionType<'a>>,
+      ~selectOption: optionType<'a> => unit,
+      ~selectProps: {..},
+      ~setValue: 'setValueProps => unit,
+      ~theme: Theme.t,
+    ) => React.element = "MenuList"
+  }
 }
 
 @module("react-select") @react.component
