@@ -1,5 +1,6 @@
 type controlProps
 
+type noOptionsMessageProps = {inputValue: string}
 type selectProps = {
   isClearable: bool,
   isDisabled: bool,
@@ -7,6 +8,7 @@ type selectProps = {
   isMulti: bool,
   isOptionDisabled: bool,
   menuListId: string,
+  noOptionsMessage: noOptionsMessageProps => React.element,
 }
 
 @module("react-select") @scope("components")
