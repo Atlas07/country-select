@@ -3,31 +3,6 @@
 module FilterAsync = ReactSelect.Filter.Async
 module Customs = CountrySelect__Customs
 
-module CustomControl = {
-  let make: (
-    React.component<ReactSelect.Components.controlProps>,
-    React.element,
-  ) => React.element = %raw(`
-    function (Control, Icon) {
-      return function (props) {
-        const { children, ...rest } = props;
-
-        return React.createElement(
-          Control,
-          rest,
-          Icon,
-          children
-        );
-      }
-    }
-  `)
-}
-
-let customControlComponent = CustomControl.make(
-  ReactSelect.Components.control,
-  <SearchSVG className="control-search-icon" />,
-)
-
 let filterCountries = FilterAsync.make(~config=FilterAsync.makeConfig(~matchFrom=#start, ()))
 
 module Dropdown = {
@@ -130,19 +105,8 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       components={
         dropdownIndicator: React.null,
         indicatorSeparator: React.null,
-        control: customControlComponent,
-        menuList: props => {
-          let {children, maxHeight, selectProps, focusedOption, getValue, options} = props
-
-          VirtualizedMenuList.make(
-            ~maxHeight,
-            ~children,
-            ~selectProps,
-            ~focusedOption,
-            ~getValue,
-            ~options,
-          )
-        },
+        control: ControlWithSearchIcon.make,
+        menuList: VirtualizedMenuList.make,
       }
       controlShouldRenderValue=false
       hideSelectedOptions=false

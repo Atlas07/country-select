@@ -2,14 +2,8 @@
 
 let itemHeight = 26
 
-let make = (
-  ~children,
-  ~maxHeight,
-  ~selectProps: ReactSelect.Components.selectProps,
-  ~focusedOption: ReactSelect.optionType<CountryModel.t>,
-  ~getValue: unit => array<ReactSelect.optionType<CountryModel.t>>,
-  ~options: array<ReactSelect.optionType<CountryModel.t>>,
-) => {
+let make = (props: ReactSelect.Components.MenuList.menuProps<CountryModel.t>) => {
+  let {children, maxHeight, selectProps, focusedOption, getValue, options} = props
   let listRef: React.ref<Js.Nullable.t<ReactWindow.listRef>> = React.useRef(Js.Nullable.null)
 
   React.useEffect(() => {

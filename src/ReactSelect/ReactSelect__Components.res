@@ -11,11 +11,66 @@ type selectProps = {
   noOptionsMessage: noOptionsMessageProps => React.element,
 }
 
-@module("react-select") @scope("components")
-external control: React.component<controlProps> = "Control"
+type cxState = {string: bool}
+type cx = (cxState, array<string>) => string
+
+module Control = {
+  type innerProps
+  type getStylesProps
+  type setValueProps
+  type propertyName
+  type classNamesProps
+
+  type controlProps<'a> = {
+    className: string,
+    isDisabled: bool,
+    isFocused: bool,
+    children: React.element,
+    innerRef: ReactDOM.domRef => unit,
+    innerProps: innerProps,
+    clearValue: unit => unit,
+    cx: cx,
+    getStyles: (string, getStylesProps) => ReactDOM.Style.t,
+    getClassNames: (propertyName, classNamesProps) => string,
+    getValue: unit => array<'a>,
+    hasValue: bool,
+    isMulti: bool,
+    isRtl: bool,
+    menuIsOpen: bool,
+    options: array<'a>,
+    selectOption: 'a => unit,
+    selectProps: selectProps,
+    setValue: ('a, setValueProps) => unit,
+    theme: ReactSelect__Theme.t,
+  }
+
+  @module("react-select") @scope("components") @react.component
+  external make: (
+    ~className: string=?,
+    ~isDisabled: bool=?,
+    ~isFocused: bool=?,
+    ~children: React.element,
+    ~innerRef: ReactDOM.domRef => unit=?,
+    ~innerProps: innerProps=?,
+    ~clearValue: unit => unit=?,
+    ~cx: cx,
+    ~getStyles: (string, getStylesProps) => ReactDOM.Style.t,
+    ~getClassNames: (propertyName, classNamesProps) => string,
+    ~getValue: unit => array<'a>=?,
+    ~hasValue: bool=?,
+    ~isMulti: bool=?,
+    ~isRtl: bool=?,
+    ~menuIsOpen: bool=?,
+    ~options: array<'a>=?,
+    ~selectOption: 'a => unit=?,
+    ~selectProps: selectProps=?,
+    ~setValue: ('a, setValueProps) => unit=?,
+    ~theme: ReactSelect__Theme.t,
+  ) => React.element = "Control"
+}
 
 module MenuList = {
-  type props<'a> = {
+  type menuProps<'a> = {
     children: array<React.element>,
     clearValue: unit => unit,
     focusedOption: 'a,
@@ -33,36 +88,12 @@ module MenuList = {
   }
 
   @module("react-select") @scope("components")
-  external menuList: React.component<props<'a>> = "MenuList"
-
-  //   @module("react-select") @scope("components") @react.component
-  //   external make: (
-  //     ~ref: 'ref=?,
-  //     ~children: React.element,
-  //     ~clearValue: unit => unit,
-  //     ~cx: 'cx,
-  //     ~focusedOption: optionType<'a>,
-  //     ~getClassNames: ('key, 'props) => string,
-  //     ~getStyles: ('key, 'props) => {..},
-  //     ~getValue: unit => array<optionType<'a>>,
-  //     ~hasValue: bool,
-  //     ~innerProps: {..},
-  //     ~innerRef: 'innerRefProps => 'innerRefObj=?,
-  //     ~isLoading: bool,
-  //     ~isMulti: bool,
-  //     ~isRtl: bool,
-  //     ~maxHeight: int,
-  //     ~options: array<optionType<'a>>,
-  //     ~selectOption: optionType<'a> => unit,
-  //     ~selectProps: {..},
-  //     ~setValue: 'setValueProps => unit,
-  //     ~theme: Theme.t,
-  //   ) => React.element = "MenuList"
+  external menuList: menuProps<'a> = "MenuList"
 }
 
 type t<'a> = {
   @as("DropdownIndicator") dropdownIndicator?: React.element,
   @as("IndicatorSeparator") indicatorSeparator?: React.element,
-  @as("Control") control?: React.element,
-  @as("MenuList") menuList?: MenuList.props<'a> => React.element,
+  @as("Control") control?: Control.controlProps<'a> => React.element,
+  @as("MenuList") menuList?: MenuList.menuProps<'a> => React.element,
 }
