@@ -23,104 +23,6 @@ module CustomControl = {
   `)
 }
 
-module VirtualizedMenuList = {
-  @react.component
-  let make = (
-    ~children: array<React.element>,
-    ~cx,
-    ~clearValue: unit => unit,
-    ~focusedOption: ReactSelect.optionType<CountryModel.t>,
-    ~getClassNames: ('key, 'props) => string,
-    ~getStyles: ('key, 'props) => {..},
-    ~getValue,
-    ~hasValue: bool,
-    ~innerProps: {..},
-    ~innerRef: 'innerRefProps => 'innerRefObj,
-    ~isLoading: bool,
-    ~isMulti: bool,
-    ~isRtl: bool,
-    ~maxHeight: int,
-    ~options: array<ReactSelect.optionType<CountryModel.t>>,
-    ~selectOption,
-    ~selectProps: {..},
-    ~setValue: 'setValueProps => unit,
-    ~theme: ReactSelect.Theme.t,
-  ) => {
-    let listRef = React.useRef(Js.Nullable.null)
-    let rowVirtualizer = ReactVirtual.useVirtualizer({
-      count: children->Array.length,
-      getScrollElement: () => listRef.current,
-      estimateSize: () => 26,
-      overscan: 5,
-    })
-
-    React.useEffect(() => {
-      let index = options->Array.findIndex(opt => opt.label == focusedOption.label)
-
-      if index >= 0 {
-        rowVirtualizer.scrollToIndex(index, None)
-      }
-
-      None
-    }, (focusedOption, options, rowVirtualizer))
-
-    <ReactSelect.Components.MenuList
-      cx
-      clearValue
-      focusedOption
-      getClassNames
-      getStyles
-      getValue
-      hasValue
-      innerProps
-      innerRef={ref => {
-        listRef.current = ref
-        innerRef(ref)
-      }}
-      isLoading
-      isMulti
-      isRtl
-      maxHeight
-      options
-      selectOption
-      selectProps
-      setValue
-      theme>
-      <div
-        role={innerProps["role"]}
-        ariaMultiselectable={innerProps["aria-multiselectable"]}
-        id={innerProps["id"]}
-        style={ReactDOM.Style.make(
-          ~height=`${rowVirtualizer.getTotalSize()->Int.toString}px`,
-          ~width="100%",
-          ~position="relative",
-          (),
-        )}>
-        {rowVirtualizer.getVirtualItems()
-        ->Array.map(virtualOption => {
-          <div
-            key={virtualOption.key->Int.toString}
-            style={ReactDOM.Style.make(
-              ~position="absolute",
-              ~top="0",
-              ~left="0",
-              ~width="100%",
-              ~height=`${virtualOption.size->Int.toString}px`,
-              ~transform=`translateY(${virtualOption.start->Int.toString}px)`,
-              (),
-            )}>
-            {switch children[virtualOption.index] {
-            | Some(child) => child
-            | None => React.null
-            }}
-          </div>
-        })
-        ->React.array}
-      </div>
-    </ReactSelect.Components.MenuList>
-  }
-}
-
 let customControlComponent = CustomControl.make(
   ReactSelect.Components.control,
   <SearchSVG className="control-search-icon" />,
@@ -229,7 +131,18 @@ let make = (~className, ~country: option<string>, ~onChange) => {
         dropdownIndicator: React.null,
         indicatorSeparator: React.null,
         control: customControlComponent,
-        menuList: VirtualizedMenuList.make->Obj.magic,
+        menuList: props => {
+          let {children, maxHeight, selectProps, focusedOption, getValue, options} = props
+
+          VirtualizedMenuList.make(
+            ~maxHeight,
+            ~children,
+            ~selectProps,
+            ~focusedOption,
+            ~getValue,
+            ~options,
+          )
+        },
       }
       controlShouldRenderValue=false
       hideSelectedOptions=false
