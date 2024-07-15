@@ -45,6 +45,7 @@ module Async = {
     ~isSelected: bool=?,
     ~isSearchable: bool=?,
     ~isClearable: bool=?,
+    ~isDisabled: bool=?,
     ~options: options<'a>=?,
     ~onChange: (optionType<'a>, actionMeta) => unit=?,
     ~onBlur: {..} => unit=?,

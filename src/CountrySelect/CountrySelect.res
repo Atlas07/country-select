@@ -17,16 +17,28 @@ module Dropdown = {
             <span className="countries-dropdown-text"> {option.label->React.string} </span>
             <TriangleSVG className="dropdown-arrow" direction={isOpen ? #up : #down} />
           </>
-        | None => "Select a State"->React.string
+        | None =>
+          <>
+            <span> {"Select a State"->React.string} </span>
+            <TriangleSVG className="dropdown-arrow" direction={isOpen ? #up : #down} />
+          </>
         }}
       </button>
     }
   }
 
   @react.component
-  let make = (~children, ~isOpen, ~onClose, ~target) => {
+  let make = (~children, ~isOpen, ~onClose, ~target, ~isError) => {
     <div className="dropdown">
       {target}
+      {switch isError {
+      | true =>
+        <div className="dropdown-error">
+          <ErrorSVG className="dropdown-error-icon" width="16" height="16" fill="red" />
+          <p> {"Something went wrong"->React.string} </p>
+        </div>
+      | false => React.null
+      }}
       {switch isOpen {
       | true =>
         <>
@@ -45,9 +57,12 @@ let make = (~className, ~country: option<string>, ~onChange) => {
   let (isLoading, setIsLoading) = React.useState(_ => false)
   let (isOpen, setIsOpen) = React.useState(_ => false)
   let (selectedOption, setSelectedOption) = React.useState(_ => None)
+  let (isError, setIsError) = React.useState(_ => false)
 
   React.useEffect(() => {
     setIsLoading(_ => true)
+    setIsError(_ => false)
+
     Queries.fetchCountries()
     ->Promise.thenResolve(maybeCountries => {
       Js.log(maybeCountries)
@@ -63,10 +78,15 @@ let make = (~className, ~country: option<string>, ~onChange) => {
         | None => ()
         }
 
-      | _ =>
+      | Error(_error) =>
         setIsLoading(_ => false)
-        assert(false)
+        setIsError(_ => true)
       }
+    })
+    ->Promise.catch(_error => {
+      setIsLoading(_ => false)
+      setIsError(_ => true)
+      Promise.resolve()
     })
     ->Promise.done
 
@@ -98,6 +118,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
   <Dropdown
     isOpen={isOpen}
     onClose={_ => setIsOpen(_ => false)}
+    isError
     target={<Dropdown.Target selectedOption isOpen setIsOpen />}>
     <ReactSelect.Async
       autoFocus=true
@@ -122,9 +143,10 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       defaultOptions=options
       loadOptions
       maxMenuHeight=400
-      styles={Customs.customStyles}
+      styles=Customs.customStyles
       theme={_ => Customs.customTheme}
       menuShouldScrollIntoView=false
+      isDisabled=isError
       formatOptionLabel={(data, _context) => {
         <>
           <span className={`fi fi-${data.value} flag-icon flag-icon-option`} />

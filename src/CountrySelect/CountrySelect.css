@@ -13,6 +13,18 @@
     position: relative;
 }
 
+.dropdown-error {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 4px;
+    color: red;
+}
+
+.dropdown-error-icon {
+    margin-right: 4px;
+}
+
 .countries-dropdown-button {
     width: 145px;
     border-radius: 3px;
