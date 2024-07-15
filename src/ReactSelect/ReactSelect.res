@@ -4,9 +4,6 @@ module Style = ReactSelect__Style
 module Filter = ReactSelect__Filter
 module Components = ReactSelect__Components
 
-type optionType<'a> = 'a
-type options<'a> = array<optionType<'a>>
-
 type actions = [
   | #clear
   | #"#create-option"
@@ -36,7 +33,7 @@ module Async = {
     ~classNamePrefix: string=?,
     ~name: string=?,
     ~clearValue: unit => unit=?,
-    ~defaultValue: option<optionType<'a>>=?,
+    ~defaultValue: option<'a>=?,
     ~getStyles: (string, {"value": 'a}) => 'b=?,
     ~hasValue: bool=?,
     ~isMulti: bool=?,
@@ -46,17 +43,17 @@ module Async = {
     ~isSearchable: bool=?,
     ~isClearable: bool=?,
     ~isDisabled: bool=?,
-    ~options: options<'a>=?,
-    ~onChange: (optionType<'a>, actionMeta) => unit=?,
+    ~options: array<'a>=?,
+    ~onChange: ('a, actionMeta) => unit=?,
     ~onBlur: {..} => unit=?,
     ~onMenuOpen: unit => unit=?,
     ~onMenuClose: unit => unit=?,
-    ~selectOption: optionType<'a> => unit=?,
+    ~selectOption: 'a => unit=?,
     ~selectProps: {..}=?,
     ~emotion: {..}=?,
-    ~loadOptions: (string, options<'a> => unit) => promise<options<'a>>=?,
-    ~defaultOptions: options<'a>=?,
-    ~value: option<optionType<'a>>=?,
+    ~loadOptions: (string, array<'a> => unit) => promise<array<'a>>=?,
+    ~defaultOptions: array<'a>=?,
+    ~value: option<'a>=?,
     ~menuShouldScrollIntoView: bool=?,
     ~menuShouldBlockScroll: bool=?,
     ~menuPlacement: menuPlacement=?,
@@ -76,6 +73,6 @@ module Async = {
     ~maxMenuHeight: int=?,
     ~styles: Style.styles=?,
     ~theme: Theme.t => Theme.t=?,
-    ~formatOptionLabel: (optionType<'a>, formatOptionLabelMeta<optionType<'a>>) => React.element=?,
+    ~formatOptionLabel: ('a, formatOptionLabelMeta<'a>) => React.element=?,
   ) => React.element = "default"
 }

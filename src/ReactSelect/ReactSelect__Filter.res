@@ -1,11 +1,3 @@
-// note: react-select supports custom createFilter logic
-// only for sync component because of inner implementation.
-// it should be able to access candidate.data.__isNew__
-// reference: https://react-select.com/advanced#custom-filter-logic
-
-// In order to support same API there is reimplementation
-// of createFilter fn inside Async module
-
 type matchFrom = [#any | #start]
 
 type filterOption<'option> = {
@@ -22,6 +14,13 @@ type t<'option> = {
   stringify: filterOption<'option> => string,
 }
 
+// note: react-select supports custom createFilter logic
+// only for sync component because of inner implementation.
+// it should be able to access candidate.data.__isNew__
+// reference: https://react-select.com/advanced#custom-filter-logic
+
+// In order to support same API there is reimplementation
+// of createFilter fn inside Async module
 module Async = {
   let makeConfig = (
     ~ignoreCase=true,

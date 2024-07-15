@@ -44,8 +44,6 @@ beforeEach(() => {
 })
 
 testAsync("renders component with selected default country", async _t => {
-  // t->assertions(2)
-
   let countries = [
     CountryModel.make(~label="United States", ~value="us"),
     CountryModel.make(~label="Ukraine", ~value="ua"),
