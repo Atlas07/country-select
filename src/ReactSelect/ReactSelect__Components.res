@@ -1,4 +1,9 @@
 type controlProps
+type innerProps
+type getStylesProps
+type setValueProps
+type propertyName
+type classNamesProps
 
 type noOptionsMessageProps = {inputValue: string}
 type selectProps = {
@@ -15,12 +20,6 @@ type cxState = {string: bool}
 type cx = (cxState, array<string>) => string
 
 module Control = {
-  type innerProps
-  type getStylesProps
-  type setValueProps
-  type propertyName
-  type classNamesProps
-
   type controlProps<'a> = {
     className: string,
     isDisabled: bool,
@@ -88,7 +87,7 @@ module MenuList = {
   }
 
   @module("react-select") @scope("components")
-  external menuList: menuProps<'a> = "MenuList"
+  external make: menuProps<'a> => React.element = "MenuList"
 }
 
 type t<'a> = {

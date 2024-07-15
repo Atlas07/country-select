@@ -64,10 +64,6 @@ let customStyles: Style.styles = {
       "minHeight": "26px",
       "padding": "2px 12px",
       "alignItems": "center",
-      "whiteSpace": "normal",
-      "textWrap": "nowrap",
-      "overflow": "hidden",
-      "textOverflow": "ellipsis",
       "color": state.theme.colors.neutral90,
     }->Style.makeStyle
     Style.mergeStyles(provided, override)

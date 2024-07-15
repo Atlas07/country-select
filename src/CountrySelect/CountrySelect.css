@@ -3,6 +3,7 @@
     height: 16px;
     display: flex;
     min-width: 16px;
+    background-color: #eee;
 }
 
 .flag-icon-option {
@@ -71,4 +72,22 @@
 
 .control-search-icon {
     margin-left: 8px;
+}
+
+.option-formatted {
+    display: flex;
+    align-items: center;
+}
+
+.option-center-value {
+    white-space: normal;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 8px;
+}
+
+.option-right-value {
+    color: rgba(0, 0, 0, 0.52);
+    margin-left: auto;
 }

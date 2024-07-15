@@ -117,10 +117,13 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       isLoading
       isDisabled=isError
       formatOptionLabel={(data, _context) => {
-        <>
+        <div className="option-formatted">
           <span className={`fi fi-${data.value} flag-icon flag-icon-option`} />
-          <span> {data.label->React.string} </span>
-        </>
+          <span className="option-center-value"> {data.label->React.string} </span>
+          // note: i'm not sure where i need to obtain this data
+          // so i leave commented code here, so it could be easily used
+          // <span className="option-right-value"> {"230.2K"->React.string} </span>
+        </div>
       }}
     />
   </Dropdown>
