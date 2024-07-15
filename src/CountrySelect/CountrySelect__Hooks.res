@@ -36,8 +36,6 @@ let useFetchCountries = () => {
     setFetchState(_ => Loading)
     Queries.fetchCountries()
     ->Promise.thenResolve(maybeCountries => {
-      Js.log(maybeCountries)
-
       switch maybeCountries {
       | Ok(countries) => setFetchState(_ => countries->Loaded)
       | Error(error) => setFetchState(_ => error.message->Failed)
