@@ -1,4 +1,6 @@
-# Vite React ReScript Starter
+# Rescript Country Select
+
+- [Live demo](https://atlas07.github.io/country-select/)
 
 - [Vite](https://vitejs.dev): Next Generation Frontend Tooling.
 - [React](https://reactjs.org): A JavaScript library for building user interfaces.
