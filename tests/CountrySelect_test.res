@@ -31,8 +31,8 @@ beforeEach(() => {
   %raw("vi.resetAllMocks()")
 })
 
-testAsync("renders component with selected default country", async t => {
-  t->assertions(1)
+testAsync("renders component with selected default country", async _t => {
+  // t->assertions(2)
 
   let countries = [
     CountryModel.make(~label="United States", ~value="us"),
@@ -50,12 +50,12 @@ testAsync("renders component with selected default country", async t => {
 
   await waitFor(() => {
     screen->getByText("United States")->expect->toBeInTheDocument
+    screen->getByText("United States")->click
+    screen->getByText("Ukraine")->expect->toBeInTheDocument
   })
 })
 
-testAsync("renders component with no selected default country", async t => {
-  t->assertions(1)
-
+testAsync("renders component with no selected default country", async _t => {
   let countries = [
     CountryModel.make(~label="United States", ~value="us"),
     CountryModel.make(~label="Ukraine", ~value="ua"),
@@ -72,12 +72,12 @@ testAsync("renders component with no selected default country", async t => {
 
   await waitFor(() => {
     screen->getByText("Select a Country")->expect->toBeInTheDocument
+    screen->getByText("Select a Country")->click
+    screen->getByText("Ukraine")->expect->toBeInTheDocument
   })
 })
 
-testAsync("renders component with no options", async t => {
-  t->assertions(1)
-
+testAsync("renders component with no options", async _t => {
   let countries = []
   await mockCountriesFetch(Queries.countriesURL, countries)
 
@@ -91,5 +91,7 @@ testAsync("renders component with no options", async t => {
 
   await waitFor(() => {
     screen->getByText("Select a Country")->expect->toBeInTheDocument
+    screen->getByText("Select a Country")->click
+    screen->getByText("No options")->expect->toBeInTheDocument
   })
 })

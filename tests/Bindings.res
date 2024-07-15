@@ -13,6 +13,9 @@ module ReactTestingLibrary = {
   @module("@testing-library/react")
   external waitFor: (unit => 'a) => promise<'a> = "waitFor"
 
+  @module("@testing-library/react") @scope("fireEvent")
+  external click: Dom.element => unit = "click"
+
   @send external getByText: (renderResult, string) => Webapi.Dom.Element.t = "getByText"
   @send external findByText: (renderResult, string) => promise<Webapi.Dom.Element.t> = "findByText"
 }
