@@ -118,6 +118,8 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       isDisabled=isError
       formatOptionLabel={(data, _context) => {
         <div className="option-formatted">
+          // note: i noticed not all flags are present
+          // would be really nice to support them for the future
           <span className={`fi fi-${data.value} flag-icon flag-icon-option`} />
           <span className="option-center-value"> {data.label->React.string} </span>
           // note: i'm not sure where i need to obtain this data
