@@ -2,7 +2,7 @@ type fetchState<'a> =
   | Initial
   | Loading
   | Loaded('a)
-  | Error(string)
+  | Failed(string)
 
 type hookResult = {
   fetchState: fetchState<array<CountryModel.t>>,
@@ -19,7 +19,7 @@ let isLoading = fetchState =>
 
 let isError = fetchState =>
   switch fetchState {
-  | Error(_) => true
+  | Failed(_) => true
   | _ => false
   }
 
@@ -40,11 +40,11 @@ let useFetchCountries = () => {
 
       switch maybeCountries {
       | Ok(countries) => setFetchState(_ => countries->Loaded)
-      | Error(error) => setFetchState(_ => error.message->Error)
+      | Error(error) => setFetchState(_ => error.message->Failed)
       }
     })
     ->Promise.catch(error => {
-      setFetchState(_ => error->String.make->Error)
+      setFetchState(_ => error->String.make->Failed)
       Promise.resolve()
     })
     ->Promise.done
