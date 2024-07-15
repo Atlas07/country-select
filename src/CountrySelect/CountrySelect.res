@@ -53,61 +53,29 @@ module Dropdown = {
 
 @react.component
 let make = (~className, ~country: option<string>, ~onChange) => {
-  let (countries, setCountries) = React.useState(_ => None)
-  let (isLoading, setIsLoading) = React.useState(_ => false)
+  let {fetchState, countries, isError, isLoading} = CountrySelect__Hooks.useFetchCountries()
   let (isOpen, setIsOpen) = React.useState(_ => false)
   let (selectedOption, setSelectedOption) = React.useState(_ => None)
-  let (isError, setIsError) = React.useState(_ => false)
 
   React.useEffect(() => {
-    setIsLoading(_ => true)
-    setIsError(_ => false)
-
-    Queries.fetchCountries()
-    ->Promise.thenResolve(maybeCountries => {
-      Js.log(maybeCountries)
-
-      switch maybeCountries {
-      | Ok(countries) =>
-        setCountries(_ => countries->Some)
-        setIsLoading(_ => false)
-
-        switch country {
-        | Some(default) =>
-          setSelectedOption(_ => countries->Array.find(country => country.value === default))
-        | None => ()
-        }
-
-      | Error(_error) =>
-        setIsLoading(_ => false)
-        setIsError(_ => true)
-      }
-    })
-    ->Promise.catch(_error => {
-      setIsLoading(_ => false)
-      setIsError(_ => true)
-      Promise.resolve()
-    })
-    ->Promise.done
-
+    switch (fetchState, country) {
+    | (Loaded(countries), Some(default)) =>
+      setSelectedOption(_ => countries->Array.find(country => country.value === default))
+    | _ => ()
+    }
     None
-  }, [])
+  }, (fetchState, country))
 
   let loadOptions = (inputValue, _callback) =>
     Promise.make((res, _rej) => {
-      switch countries {
-      | Some(options) =>
+      switch fetchState {
+      | Loaded(options) =>
         let filtered =
           options->Array.filter(option => filterCountries(~candidate=option.label, ~inputValue))
         filtered->res
-      | None => []->res
+      | _ => []->res
       }
     })
-
-  let options = switch countries {
-  | Some(counties) => counties
-  | None => []
-  }
 
   let handleChange = (option, _action) => {
     setSelectedOption(_ => option->Some)
@@ -137,15 +105,15 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       tabSelectsValue=false
       value={selectedOption}
       className
-      isLoading
       placeholder="Search"
       cacheOptions=true
-      defaultOptions=options
+      defaultOptions=countries
       loadOptions
       maxMenuHeight=400
       styles=Customs.customStyles
       theme={_ => Customs.customTheme}
       menuShouldScrollIntoView=false
+      isLoading
       isDisabled=isError
       formatOptionLabel={(data, _context) => {
         <>
