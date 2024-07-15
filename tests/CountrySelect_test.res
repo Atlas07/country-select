@@ -35,7 +35,7 @@ beforeEach(() => {
   %raw("vi.resetAllMocks()")
 })
 
-testAsync("renders component with preselected option", async t => {
+testAsync("renders component with selected default country", async t => {
   t->assertions(1)
 
   await mockFetch(Queries.countriesURL)
@@ -50,5 +50,23 @@ testAsync("renders component with preselected option", async t => {
 
   await waitFor(() => {
     screen->getByText("United States")->expect->toBeInTheDocument
+  })
+})
+
+testAsync("renders component with no selected default country", async t => {
+  t->assertions(1)
+
+  await mockFetch(Queries.countriesURL)
+
+  act(() => {
+    render(
+      <CountrySelect
+        className="country-select" country=None onChange={country => Js.log(country)}
+      />,
+    )
+  })
+
+  await waitFor(() => {
+    screen->getByText("Select a Country")->expect->toBeInTheDocument
   })
 })

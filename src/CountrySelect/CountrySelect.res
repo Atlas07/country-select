@@ -19,7 +19,7 @@ module Dropdown = {
           </>
         | None =>
           <>
-            <span> {"Select a Counry"->React.string} </span>
+            <span> {"Select a Country"->React.string} </span>
             <TriangleSVG className="dropdown-arrow" direction={isOpen ? #up : #down} />
           </>
         }}
