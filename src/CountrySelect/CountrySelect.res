@@ -101,6 +101,7 @@ let make = (~className, ~country: option<string>, ~onChange) => {
       hideSelectedOptions=false
       isClearable=false
       menuIsOpen=true
+      onMenuClose={_ => setIsOpen(_ => false)}
       onChange={(option, action) => handleChange(option, action)}
       tabSelectsValue=false
       value={selectedOption}

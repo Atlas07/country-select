@@ -50,6 +50,7 @@ module Async = {
     ~onChange: (optionType<'a>, actionMeta) => unit=?,
     ~onBlur: {..} => unit=?,
     ~onMenuOpen: unit => unit=?,
+    ~onMenuClose: unit => unit=?,
     ~selectOption: optionType<'a> => unit=?,
     ~selectProps: {..}=?,
     ~emotion: {..}=?,
