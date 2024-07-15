@@ -72,7 +72,7 @@ module MenuList = {
   type menuProps<'a> = {
     children: array<React.element>,
     clearValue: unit => unit,
-    focusedOption: 'a,
+    focusedOption: option<'a>,
     getValue: unit => array<'a>,
     hasValue: bool,
     innerRef: option<ReactDOM.domRef => unit>,
@@ -81,7 +81,7 @@ module MenuList = {
     isRtl: bool,
     maxHeight: int,
     options: array<'a>,
-    selectOption: 'a => unit,
+    selectOption: option<'a> => unit,
     selectProps: selectProps,
     theme: ReactSelect__Theme.t,
   }

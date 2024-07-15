@@ -7,7 +7,10 @@ let make = (props: ReactSelect.Components.MenuList.menuProps<CountryModel.t>) =>
   let listRef: React.ref<Js.Nullable.t<ReactWindow.listRef>> = React.useRef(Js.Nullable.null)
 
   React.useEffect(() => {
-    let focusIndex = options->Array.findIndex(opt => opt.label === focusedOption.label)
+    let focusIndex = switch focusedOption {
+    | Some(focusedOption) => options->Array.findIndex(opt => opt.label === focusedOption.label)
+    | None => -1
+    }
 
     switch (focusIndex >= 0, listRef.current->Nullable.toOption) {
     | (true, Some(ref)) => ref.scrollToItem(. focusIndex, #smart)
@@ -34,8 +37,13 @@ let make = (props: ReactSelect.Components.MenuList.menuProps<CountryModel.t>) =>
         ref={listRef}>
         {({index, style}) => {
           let child = children->Array.get(index)->Option.getOr(React.null)
-          let option = options->Array.get(index)->Option.getOr(focusedOption)
-          let isSelected = getValue()->Array.some(value => value.label == option.label)
+
+          let isSelected = switch focusedOption {
+          | Some(focusedOption) =>
+            let option = options->Array.get(index)->Option.getOr(focusedOption)
+            getValue()->Array.some(value => value.label == option.label)
+          | None => false
+          }
 
           <div
             style={style}
