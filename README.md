@@ -9,7 +9,7 @@ A customizable country selection component built with ReScript and React.
 - Virtualized list for efficient rendering of large datasets
 - Async loading of country data
 - Customizable styling
-- Keyboard navigation support
+- Keyboard navigation support (note: dropdown should be focused)
 - Country flag icons integration
 - Type-safe data validation
 
@@ -51,3 +51,14 @@ Country flag icons are provided by the flag-icons library, offering high-quality
 3. Start the development server: `npm run dev`
 4. Run tests: `npm test`
 5. Build for production: `npm run build`
+
+## Next Steps
+
+1. Add Storybook for CountriesSelect as it could be treated as reusable component
+2. Implement i18n support for multi-language functionality
+3. Implement keyboard shortcut for quick country selection (e.g., typing country code)
+4. Create a changelog to track version updates and changes
+5. Implement a theming system for easy style customization
+6. Add support for region/continent filtering
+7. Support for missing flags
+8. Lazy load flags for slow connections, SSR support
