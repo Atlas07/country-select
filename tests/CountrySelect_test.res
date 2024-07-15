@@ -11,12 +11,8 @@ let awaitFor = ms => {
   })
 }
 
-let mockFetch: string => promise<unit> = %raw(`
-  function (urlToMock) {
-     const mockedCountries = [
-        {"label": "United States", "value": "us"},
-        {"label": "Ukraine", "value": "ua"},
-    ]
+let mockCountriesFetch: (string, array<CountryModel.t>) => promise<unit> = %raw(`
+  function (urlToMock, mockedCountries) {
 
     global.fetch = (url) => {
       if (url === urlToMock) {
@@ -38,7 +34,11 @@ beforeEach(() => {
 testAsync("renders component with selected default country", async t => {
   t->assertions(1)
 
-  await mockFetch(Queries.countriesURL)
+  let countries = [
+    CountryModel.make(~label="United States", ~value="us"),
+    CountryModel.make(~label="Ukraine", ~value="ua"),
+  ]
+  await mockCountriesFetch(Queries.countriesURL, countries)
 
   act(() => {
     render(
@@ -56,7 +56,30 @@ testAsync("renders component with selected default country", async t => {
 testAsync("renders component with no selected default country", async t => {
   t->assertions(1)
 
-  await mockFetch(Queries.countriesURL)
+  let countries = [
+    CountryModel.make(~label="United States", ~value="us"),
+    CountryModel.make(~label="Ukraine", ~value="ua"),
+  ]
+  await mockCountriesFetch(Queries.countriesURL, countries)
+
+  act(() => {
+    render(
+      <CountrySelect
+        className="country-select" country=None onChange={country => Js.log(country)}
+      />,
+    )
+  })
+
+  await waitFor(() => {
+    screen->getByText("Select a Country")->expect->toBeInTheDocument
+  })
+})
+
+testAsync("renders component with no options", async t => {
+  t->assertions(1)
+
+  let countries = []
+  await mockCountriesFetch(Queries.countriesURL, countries)
 
   act(() => {
     render(

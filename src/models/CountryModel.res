@@ -6,3 +6,8 @@ type t = {
 
 @spice
 type counties = array<t>
+
+let make = (~label, ~value) => {
+  label,
+  value,
+}
