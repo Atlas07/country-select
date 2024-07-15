@@ -27,6 +27,18 @@ let mockCountriesFetch: (string, array<CountryModel.t>) => promise<unit> = %raw(
   }
 `)
 
+let mockFailedCountriesFetch: (string, array<CountryModel.t>) => promise<unit> = %raw(`
+  function (urlToMock, mockedCountries) {
+    global.fetch = (url) => {
+      if (url === urlToMock) {
+        return Promise.reject("Issue")
+      } else {
+        Promise.resolve({})
+      }
+    } 
+  }
+`)
+
 beforeEach(() => {
   %raw("vi.resetAllMocks()")
 })
@@ -93,5 +105,23 @@ testAsync("renders component with no options", async _t => {
     screen->getByText("Select a Country")->expect->toBeInTheDocument
     screen->getByText("Select a Country")->click
     screen->getByText("No options")->expect->toBeInTheDocument
+  })
+})
+
+testAsync("renders error message if failed to fetch countries", async _t => {
+  let countries = []
+  await mockFailedCountriesFetch(Queries.countriesURL, countries)
+
+  act(() => {
+    render(
+      <CountrySelect
+        className="country-select" country=None onChange={country => Js.log(country)}
+      />,
+    )
+  })
+
+  await waitFor(() => {
+    screen->getByText("Select a Country")->expect->toBeInTheDocument
+    screen->getByText("Something went wrong")->expect->toBeInTheDocument
   })
 })
